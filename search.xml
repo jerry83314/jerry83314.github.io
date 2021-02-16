@@ -2,7 +2,7 @@
 <search>
   <entry>
     <title>Promise 搭配 $nextTick</title>
-    <url>/2021/02/13/Promise%20%E6%90%AD%E9%85%8D%20$nextTick/</url>
+    <url>/2021/02/16/%E6%90%AD%E9%85%8D/</url>
     <content><![CDATA[<p>最近的一個專案中，切版的部分是外包，我要引入對方的 jQuery 套件和一些第三方 JS<br>正常會有幾個做法，最簡單的就是在 Vue Cli 的 public/index.html 直接貼上 script<br>另外也可以在 mounted hook 的時候引入這些東西<br>但是當東西太多，上面兩個方法都行不通的時候，我當下呈現這個表情：<br><img src="https://i.imgur.com/HHQ18B6.png" alt="Image"></p>
 <hr>
 <p>幾經波折跟同事研究之後，決定用 <code>$nextTick</code> 來處理，但還有牽扯到打 API 拿資料，這時候情況就會變得比較複雜了<br><img src="https://i.imgur.com/zYRAcqw.png" alt="Image"></p>
