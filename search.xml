@@ -1,17 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>我的第一篇文章</title>
-    <url>/2021/02/13/%E6%88%91%E7%9A%84%E7%AC%AC%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0/</url>
-    <content><![CDATA[<p>我的第一篇文章</p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> map = &#123;</span><br><span class="line">  <span class="number">1</span>: <span class="string">&#x27;Jan&#x27;</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-<p><img src="https://i.imgur.com/lVHvClv.png" alt="Image"><br><img src="https://i.imgur.com/JKgaiCA.png" alt="Image"><br><img src="https://i.imgur.com/aubvLhK.png" alt="Image"></p>
+    <title>Promise 搭配 $nextTick</title>
+    <url>/2021/02/13/Promise%20%E6%90%AD%E9%85%8D%20$nextTick/</url>
+    <content><![CDATA[<p>最近的一個專案中，切版的部分是外包，我要引入對方的 jQuery 套件和一些第三方 JS<br>正常會有幾個做法，最簡單的就是在 Vue Cli 的 public/index.html 直接貼上 script<br>另外也可以在 mounted hook 的時候引入這些東西<br>但是當東西太多，上面兩個方法都行不通的時候，我當下呈現這個表情：<br><img src="https://i.imgur.com/HHQ18B6.png" alt="Image"></p>
+<hr>
+<p>幾經波折跟同事研究之後，決定用 <code>$nextTick</code> 來處理，但還有牽扯到打 API 拿資料，這時候情況就會變得比較複雜了<br><img src="https://i.imgur.com/zYRAcqw.png" alt="Image"></p>
+<hr>
+<p>我們分了幾個步驟：</p>
+<h5 id="把打-API-的-function-改成-return-promise"><a href="#把打-API-的-function-改成-return-promise" class="headerlink" title="把打 API 的 function 改成 return promise"></a>把打 API 的 function 改成 return promise</h5><h5 id="在成功打到-API-之後採用-nextTick"><a href="#在成功打到-API-之後採用-nextTick" class="headerlink" title="在成功打到 API 之後採用 $nextTick"></a>在成功打到 API 之後採用 $nextTick</h5><h5 id="挖出要執行的-jQuery-code-放在-nextTick-裡面"><a href="#挖出要執行的-jQuery-code-放在-nextTick-裡面" class="headerlink" title="挖出要執行的 jQuery code 放在 $nextTick 裡面"></a>挖出要執行的 jQuery code 放在 $nextTick 裡面</h5><h5 id="在-mouted-hook-引用-promise"><a href="#在-mouted-hook-引用-promise" class="headerlink" title="在 mouted hook 引用 promise"></a>在 mouted hook 引用 promise</h5><p>PS. 這裡會用 Promise.all 是因為不只打了一隻 API</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="title">mounted</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">  <span class="built_in">Promise</span>.all([<span class="built_in">this</span>.getData()])</span><br><span class="line">    .then(<span class="function">() =&gt;</span> &#123;&#125;)</span><br><span class="line">&#125;,</span><br><span class="line">methods: &#123;</span><br><span class="line">  <span class="function"><span class="title">getData</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function">(<span class="params">resolve, reject</span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="built_in">this</span>.axios.post(url, &#123;&#125;)</span><br><span class="line">        .then(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">          <span class="built_in">this</span>.$nextTick(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">            <span class="comment">// 要放的 jQuery code</span></span><br><span class="line">            resolve()</span><br><span class="line">          &#125;)</span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
+<hr>
+<p>這樣就成功的解決了呢，我們研究了很久才終於搞定，真的是平安喜樂呢！<br><img src="https://i.imgur.com/fHL3aX7.png" alt="Image"></p>
+<hr>
+<p>今年因為疫情的關係，沒有辦法出國玩，卻不知不覺的學習了很多東西，也是得償所望啊<br>願我們能在技術這條路上，繼續走下去，共勉之。<br>最後祝大家：<br><img src="https://i.imgur.com/EplMtIc.png" alt="Image"></p>
 ]]></content>
       <categories>
-        <category>測試分類</category>
+        <category>Vue</category>
       </categories>
       <tags>
-        <tag>測試</tag>
+        <tag>Promise</tag>
+        <tag>$nextTick</tag>
+        <tag>Vue Cli</tag>
       </tags>
   </entry>
 </search>
