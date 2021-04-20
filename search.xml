@@ -40,4 +40,28 @@
         <tag>JavaScript</tag>
       </tags>
   </entry>
+  <entry>
+    <title>Node 初體驗</title>
+    <url>/2021/04/20/Node%20%E5%88%9D%E9%AB%94%E9%A9%97/</url>
+    <content><![CDATA[<h2 id="PS-請先安裝好-node-js-應用程式-連結"><a href="#PS-請先安裝好-node-js-應用程式-連結" class="headerlink" title="PS. 請先安裝好 node.js 應用程式  連結"></a>PS. 請先安裝好 node.js 應用程式  <a href="https://nodejs.org/en/">連結</a></h2><h4 id="環境建立"><a href="#環境建立" class="headerlink" title="環境建立"></a>環境建立</h4><p>正式進入 Node 的世界，首先先在桌面建立一個資料夾 mock<br>接著在終端機輸入 npm init，接著一路 Enter 到底，這些都是可以做更改的，所以不用擔心!<br>init 完之後，mock 資料夾內會多一個 package.json 就代表成功了</p>
+<hr>
+<h4 id="第一步"><a href="#第一步" class="headerlink" title="第一步"></a>第一步</h4><p>接著試著引用 node 內建的 http 吧!<br>在 mock 資料夾內新增一個 index.js<br>接著來寫點 code</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> http = <span class="built_in">require</span>(<span class="string">&#x27;http&#x27;</span>);</span><br><span class="line"></span><br><span class="line">http.createServer(<span class="keyword">async</span> (req, res) =&gt; &#123;</span><br><span class="line">  res.end(<span class="string">&#x27;&lt;p&gt;Hello World!&lt;/p&gt;&#x27;</span>);</span><br><span class="line">&#125;).listen(<span class="number">3000</span>)</span><br></pre></td></tr></table></figure>
+<p>這時候在終端機輸入 <code>node index.js</code> 啟用之後，可以在 local 的 3000 port 看到 Hello World! 就代表成功了</p>
+<p>然而當回應的內容有修改時，都需重新輸入 node index.js，為了避免這個麻煩，可以使用 <a href="https://www.npmjs.com/package/nodemon">nodemon</a> 來協助專案</p>
+<p>npm install -g nodemon 安裝好之後，在終端機輸入 <code>nodemon index.js</code>，這樣當回應的內容有修改時，就不需要每次都輸入 node index.js，只需在頁面做重整就好囉~</p>
+<h4 id="模組化的引用"><a href="#模組化的引用" class="headerlink" title="模組化的引用"></a>模組化的引用</h4><p>當 JS 檔案變多的時候，會區分資料夾，這時候 node 也有模組化的匯出跟引用模式<br>假設我們想要讓頁面三秒後呈現，我們可以在 mock 資料夾內新增一個 utils 資料夾，裡面新增一個 sleep.js，接著寫點 setTimeout</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> sleep = <span class="function"><span class="params">ms</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function"><span class="params">resolve</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">setTimeout</span>(resolve, ms);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports = sleep</span><br></pre></td></tr></table></figure>
+<p>最後的 <code>module.exports</code> 就是匯出的意思<br>接著回到 index.js require引入</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> sleep = <span class="built_in">require</span>(<span class="string">&quot;./utils/sleep&quot;</span>);</span><br></pre></td></tr></table></figure>
+<p>這樣就完成了</p>
+<hr>
+]]></content>
+      <categories>
+        <category>node</category>
+      </categories>
+      <tags>
+        <tag>node</tag>
+      </tags>
+  </entry>
 </search>
