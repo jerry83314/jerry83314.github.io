@@ -64,4 +64,30 @@
         <tag>node</tag>
       </tags>
   </entry>
+  <entry>
+    <title>Firebase 初體驗</title>
+    <url>/2021/04/21/firebase%20%E5%88%9D%E9%AB%94%E9%A9%97/</url>
+    <content><![CDATA[<p>firebase 為一款 Google 旗下的資料庫系統，不只跨足 Web，APP 也可以一起整合使用<br>會接觸到 firebase 是因為正好在學習 node 了解後端的部分，這就需要資料庫了，所以就來認識 firebase 了</p>
+<h4 id="進入-Firebase-網站創建專案"><a href="#進入-Firebase-網站創建專案" class="headerlink" title="進入 Firebase 網站創建專案"></a>進入 Firebase 網站創建專案</h4><p>這裡因介面常常改版，所以不會截圖，但主要是進到 firebase 網站，利用 google 帳號登入，前往控制台，並新建一個專案的資料庫系統，firebase 有很多功能，但目前我用到的僅只有 database</p>
+<h4 id="與自己的-html-檔案相連"><a href="#與自己的-html-檔案相連" class="headerlink" title="與自己的 html 檔案相連"></a>與自己的 html 檔案相連</h4><p>在自己本機的 html 檔案如果要跟 firebase 資料庫做相連的話，會取得一組 script，會長的如下:</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!-- The core Firebase JS SDK is always required and must be listed first --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;https://www.gstatic.com/firebasejs/8.4.1/firebase-app.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;https://www.gstatic.com/firebasejs/8.4.1/firebase-database.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- <span class="doctag">TODO:</span> Add SDKs for Firebase products that you want to use</span></span><br><span class="line"><span class="comment">     https://firebase.google.com/docs/web/setup#available-libraries --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;https://www.gstatic.com/firebasejs/8.4.1/firebase-analytics.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="javascript">    <span class="comment">// Your web app&#x27;s Firebase configuration</span></span></span><br><span class="line"><span class="javascript">    <span class="comment">// For Firebase JS SDK v7.20.0 and later, measurementId is optional</span></span></span><br><span class="line"><span class="javascript">    <span class="keyword">var</span> firebaseConfig = &#123;</span></span><br><span class="line"><span class="javascript">      apiKey: <span class="string">&quot;xxxxxxxxx&quot;</span>,</span></span><br><span class="line"><span class="javascript">      authDomain: <span class="string">&quot;xxxxxxxxx&quot;</span>,</span></span><br><span class="line"><span class="javascript">      projectId: <span class="string">&quot;xxxxxxxxx&quot;</span>,</span></span><br><span class="line"><span class="javascript">      storageBucket: <span class="string">&quot;xxxxxxxxx&quot;</span>,</span></span><br><span class="line"><span class="javascript">      messagingSenderId: <span class="string">&quot;xxxxxxxxx&quot;</span>,</span></span><br><span class="line"><span class="javascript">      appId: <span class="string">&quot;xxxxxxxxx&quot;</span>,</span></span><br><span class="line"><span class="javascript">      measurementId: <span class="string">&quot;xxxxxxxxx&quot;</span></span></span><br><span class="line">    &#125;;</span><br><span class="line"><span class="javascript">    <span class="comment">// Initialize Firebase</span></span></span><br><span class="line">    firebase.initializeApp(firebaseConfig);</span><br><span class="line">    firebase.analytics();</span><br><span class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>這裡 xxxxxxxxx 的部分，類似於資料庫的帳密<br>這裡踩到的雷，有兩部分<br>firebase 因改版的關係，sdk 的功能沒有全部寫在一起了，所以僅只載入 firebase-app.js 的情況下用 database 是不行的，所以 database 的 js 要另外載入<br>第二點就是版本要全部統一，不然也會不能運行</p>
+<h4 id="幫資料庫新增資料"><a href="#幫資料庫新增資料" class="headerlink" title="幫資料庫新增資料"></a>幫資料庫新增資料</h4><p>接著可以在本機的 html 的 script 寫點東西，幫資料庫新增資料</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line">firebase.database().ref().set(<span class="string">&#x27;hello&#x27;</span>)</span><br></pre></td></tr></table></figure>
+<p>這個時候在資料庫內就可以看到一組字串 hello<br>ref() 是指在根目錄<br>set() 是新增一筆資料</p>
+<p>比較重要的一點就是，最外層不能接收陣列，可以是字串或物件，但不能是陣列<br>舉個例子:</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> data = [];</span><br></pre></td></tr></table></figure>
+<p>如果上述的方式添加到資料庫內，是會亂掉的，但資料的結構往往很複雜，這時候可以用物件格式在最外層，內層就可以採用陣列，如下:</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> data = &#123;</span><br><span class="line">    food: [</span><br><span class="line">        &#123;</span><br><span class="line">            title: <span class="string">&#x27;&#x27;</span>,</span><br><span class="line">            content: <span class="string">&#x27;&#x27;</span></span><br><span class="line">        &#125;</span><br><span class="line">    ]</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>如果要修改某一筆資料，ref() 的路徑跟資料結構就要對的起來，以上面的例子來說，我想更改 food 的 title，這個時候就會寫成這樣:</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line">firebase.database().ref(<span class="string">&#x27;food/0/title&#x27;</span>).set(內容)</span><br></pre></td></tr></table></figure>
+<p>這樣資料庫的內容就可以被做更改了~~~</p>
+]]></content>
+      <categories>
+        <category>firebase</category>
+      </categories>
+      <tags>
+        <tag>firebase</tag>
+      </tags>
+  </entry>
 </search>
