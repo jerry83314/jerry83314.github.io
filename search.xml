@@ -105,4 +105,26 @@
         <tag>firebase</tag>
       </tags>
   </entry>
+  <entry>
+    <title>Firebase 新增和移除資料</title>
+    <url>/2021/04/24/firebase%20%E6%96%B0%E5%A2%9E%E5%92%8C%E7%A7%BB%E9%99%A4%E8%B3%87%E6%96%99md/</url>
+    <content><![CDATA[<p>前面有講到 <code>.set()</code> 新增資料到 firebase 內<br>假設 firebase 已經有資料了，要新增一筆資料到既有資料的 firebase 內，該怎麼做？<br>這時候可以使用 <code>.push()</code></p>
+<h4 id="先找到根目錄"><a href="#先找到根目錄" class="headerlink" title="先找到根目錄"></a>先找到根目錄</h4><p>類似移動到根目錄</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> ref = firebase.database().ref();</span><br></pre></td></tr></table></figure>
+<h4 id="善用-child-找到要新增資料的節點"><a href="#善用-child-找到要新增資料的節點" class="headerlink" title="善用 .child() 找到要新增資料的節點"></a>善用 .child() 找到要新增資料的節點</h4><p>可以運用 .child() 來找到要放置資料的地方，假設新增的資料要放在 about 底下，就可以這樣寫</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line">ref.child(<span class="string">&#x27;about&#x27;</span>);</span><br></pre></td></tr></table></figure>
+<h4 id="運用-push-新增資料"><a href="#運用-push-新增資料" class="headerlink" title="運用 .push() 新增資料"></a>運用 .push() 新增資料</h4><p>上面移動到 about 底下之後，就可以使用 .push() 來新增資料，為一個物件格式</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line">ref.child(<span class="string">&#x27;about&#x27;</span>).push(&#123; <span class="attr">test</span>: <span class="string">&#x27;test&#x27;</span> &#125;);</span><br></pre></td></tr></table></figure>
+<p>這個時候到 firebase 看，about 底下就會多一筆物件資料，而且是有一組亂碼編號的，這個亂碼編號很重要，因為刪除就必須要使用到它</p>
+<h4 id="remove-移除資料"><a href="#remove-移除資料" class="headerlink" title=".remove() 移除資料"></a>.remove() 移除資料</h4><p>上述提到的亂碼編號，就可以這樣寫來刪除資料:</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// -MZ3F2vUp5n7KPLfa1ls 是我新增資料的亂碼編號</span></span><br><span class="line">ref.child(<span class="string">&#x27;about&#x27;</span>).child(<span class="string">&#x27;-MZ3F2vUp5n7KPLfa1ls&#x27;</span>).remove();</span><br></pre></td></tr></table></figure>
+<p>上述的方法，融會貫通之後，可以交錯的使用來新增移除資料</p>
+]]></content>
+      <categories>
+        <category>firebase</category>
+      </categories>
+      <tags>
+        <tag>firebase</tag>
+      </tags>
+  </entry>
 </search>
