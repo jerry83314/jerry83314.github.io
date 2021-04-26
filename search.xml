@@ -151,4 +151,61 @@
         <tag>firebase</tag>
       </tags>
   </entry>
+  <entry>
+    <title>Firebase 資料排序</title>
+    <url>/2021/04/26/firebase-%E8%B3%87%E6%96%99%E6%8E%92%E5%BA%8F/</url>
+    <content><![CDATA[<p>這裡要來說明資料在 firebase 時，如何能依照指定的屬性數值大小，從小到大做排序</p>
+<h4 id="寫入資料到-firebase"><a href="#寫入資料到-firebase" class="headerlink" title="寫入資料到 firebase"></a>寫入資料到 firebase</h4><p>首先，先把資料寫入到 firebase，格式會如下:</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> people = &#123;</span><br><span class="line">  <span class="string">&#x27;bob&#x27;</span>: &#123;</span><br><span class="line">    weight: <span class="number">45</span>,</span><br><span class="line">    age: <span class="number">20</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="string">&#x27;John&#x27;</span>: &#123;</span><br><span class="line">    weight: <span class="number">50</span>,</span><br><span class="line">    age: <span class="number">15</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="string">&#x27;mike&#x27;</span>: &#123;</span><br><span class="line">    weight: <span class="number">60</span>,</span><br><span class="line">    age: <span class="number">30</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> peopleRef = firebase.database().ref(<span class="string">&#x27;people&#x27;</span>);</span><br><span class="line">peopleRef.set(people);</span><br></pre></td></tr></table></figure>
+<hr>
+<h4 id="運用-orderByChild-搭配-forEach-把資料做排序"><a href="#運用-orderByChild-搭配-forEach-把資料做排序" class="headerlink" title="運用 .orderByChild() 搭配 .forEach() 把資料做排序"></a>運用 .orderByChild() 搭配 .forEach() 把資料做排序</h4><p>假設現在我們希望資料的排序能依照 age 屬性的值從小到大做排序的話，可以運用 .orderByChild() 搭配 .forEach()</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line">peopleRef.orderByChild(<span class="string">&#x27;age&#x27;</span>).once(<span class="string">&#x27;value&#x27;</span>, <span class="function"><span class="keyword">function</span>(<span class="params">snapshot</span>) </span>&#123;</span><br><span class="line">  snapshot.forEach(<span class="function"><span class="keyword">function</span>(<span class="params">item</span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(item.val());</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>這時候在 console 看，資料就會照我們期望的樣子做排序</p>
+<hr>
+<h4 id="orderByChild-排序規則"><a href="#orderByChild-排序規則" class="headerlink" title=".orderByChild() 排序規則"></a>.orderByChild() 排序規則</h4><p><code>.orderByChild()</code> 有一套排序規則，當今天每一筆資料的屬性內的值，若型別都不一樣時，排序規則會如下:</p>
+<ol>
+<li>null </li>
+<li>false</li>
+<li>true</li>
+<li>number 從小到大</li>
+<li>字串</li>
+<li>其他: 例如物件</li>
+</ol>
+<p>這裡附上<a href="https://firebase.google.com/docs/database/web/lists-of-data#sort_data">連結</a></p>
+]]></content>
+      <categories>
+        <category>firebase</category>
+      </categories>
+      <tags>
+        <tag>firebase</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Firebase 資料搜尋區間</title>
+    <url>/2021/04/26/Firebase-%E8%B3%87%E6%96%99%E6%90%9C%E5%B0%8B%E5%8D%80%E9%96%93/</url>
+    <content><![CDATA[<p>這裡來指定 firebase 內的資料按照我們要的區間來搜尋</p>
+<h4 id="寫入資料"><a href="#寫入資料" class="headerlink" title="寫入資料"></a>寫入資料</h4><p>這裡更換一下資料，一樣寫入到 firebase 內</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> people = &#123;</span><br><span class="line">        <span class="string">&quot;mike&quot;</span>: &#123;</span><br><span class="line">          <span class="string">&quot;height&quot;</span> : <span class="number">4</span>,</span><br><span class="line">          <span class="string">&quot;length&quot;</span> : <span class="number">12.5</span>,</span><br><span class="line">          <span class="string">&quot;weight&quot;</span>: <span class="number">5000</span></span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="string">&quot;casper&quot;</span>: &#123;</span><br><span class="line">          <span class="string">&quot;height&quot;</span> : <span class="number">3</span>,</span><br><span class="line">          <span class="string">&quot;length&quot;</span> : <span class="number">9</span>,</span><br><span class="line">          <span class="string">&quot;weight&quot;</span> : <span class="number">2500</span></span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="string">&quot;bob&quot;</span>: &#123;</span><br><span class="line">          <span class="string">&quot;height&quot;</span>: <span class="string">&quot;dalse&quot;</span>,</span><br><span class="line">          <span class="string">&quot;length&quot;</span> : <span class="literal">false</span>,</span><br><span class="line">          <span class="string">&quot;weight&quot;</span> : <span class="number">3500</span></span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="string">&quot;john&quot;</span>: &#123;</span><br><span class="line">          <span class="string">&quot;height&quot;</span> : <span class="literal">true</span>,</span><br><span class="line">          <span class="string">&quot;length&quot;</span> : <span class="number">9</span>,</span><br><span class="line">          <span class="string">&quot;weight&quot;</span> : <span class="number">2500</span></span><br><span class="line">        &#125;</span><br><span class="line">        ,</span><br><span class="line">        <span class="string">&quot;josh&quot;</span>: &#123;</span><br><span class="line">          <span class="string">&quot;height&quot;</span> : <span class="literal">false</span>,</span><br><span class="line">          <span class="string">&quot;length&quot;</span> : <span class="number">9</span>,</span><br><span class="line">          <span class="string">&quot;weight&quot;</span> : <span class="number">2500</span></span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="string">&#x27;boss&#x27;</span>:&#123;</span><br><span class="line">          <span class="string">&quot;length&quot;</span>: <span class="number">3</span></span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="string">&#x27;frank&#x27;</span>:&#123;</span><br><span class="line">          height:&#123;<span class="string">&#x27;aaa&#x27;</span>:<span class="number">1</span>&#125;</span><br><span class="line">        &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> peopleRef = firebase.database().ref(<span class="string">&#x27;people&#x27;</span>);</span><br><span class="line">peopleRef.set(people);</span><br></pre></td></tr></table></figure>
+<hr>
+<h4 id="資料搜尋區間"><a href="#資料搜尋區間" class="headerlink" title="資料搜尋區間"></a>資料搜尋區間</h4><p>假設資料我們需要的是某一個區間的值，這時候可以採用 <code>.stratAt()</code> <code>.endAt()</code><br>如果上述的資料，希望抓出 weight 值為 3500 ~ 5000，就可以這樣寫:</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line">peopleRef.orderByChild(<span class="string">&#x27;weight&#x27;</span>).startAt(<span class="number">3500</span>).endAt(<span class="number">5000</span>).once(<span class="string">&#x27;value&#x27;</span>, <span class="function"><span class="keyword">function</span>(<span class="params">snapshot</span>) </span>&#123;</span><br><span class="line">  snapshot.forEach(<span class="function"><span class="keyword">function</span>(<span class="params">item</span>) </span>&#123;</span><br><span class="line">    <span class="comment">// 可以運用 key 抓出資料的父層</span></span><br><span class="line">    <span class="built_in">console</span>.log(item.key, item.val());</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>這時候就會抓出 bob 和 mike 兩筆資料</p>
+<hr>
+<h4 id="資料剛好等於某個值"><a href="#資料剛好等於某個值" class="headerlink" title="資料剛好等於某個值"></a>資料剛好等於某個值</h4><p>有時候成千上萬筆資料中，我們剛好知道某個值，可以藉此下去搜尋資料<br>例如: email<br>那上述的資料，希望抓出 weight 為 5000 的資料，就可以使用 <code>.equalTo()</code></p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line">peopleRef.orderByChild(<span class="string">&#x27;weight&#x27;</span>).equalTo(<span class="number">5000</span>).once(<span class="string">&#x27;value&#x27;</span>, <span class="function"><span class="keyword">function</span>(<span class="params">snapshot</span>) </span>&#123;</span><br><span class="line">  snapshot.forEach(<span class="function"><span class="keyword">function</span>(<span class="params">item</span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(item.key, item.val());</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>這時候就會抓出 mike 這筆資料</p>
+<hr>
+<h4 id="限制筆數"><a href="#限制筆數" class="headerlink" title="限制筆數"></a>限制筆數</h4><p>假設資料成千上萬筆，且都有符合要的條件，這時候可以給予限制要抓取的筆數<br>而且可以從最前面符合的資料開始抓 <code>.limitToFirst(要抓取的筆數)</code><br>或者從最後面符合的資料開始抓 <code>.limitToLast(要抓取的筆數)</code><br>假設我們要抓取 weight 值為 2500，且從最前面開始抓取一筆資料:</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line">peopleRef.orderByChild(<span class="string">&#x27;weight&#x27;</span>).equalTo(<span class="number">2500</span>).limitToFirst(<span class="number">1</span>).once(<span class="string">&#x27;value&#x27;</span>, <span class="function"><span class="keyword">function</span> (<span class="params">snapshot</span>) </span>&#123;</span><br><span class="line">  snapshot.forEach(<span class="function"><span class="keyword">function</span> (<span class="params">item</span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(item.key, item.val());</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>這時候 console 會是 casper 這筆資料<br>如果反過來從後面開始抓呢:</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line">peopleRef.orderByChild(<span class="string">&#x27;weight&#x27;</span>).equalTo(<span class="number">2500</span>).limitToLast(<span class="number">1</span>).once(<span class="string">&#x27;value&#x27;</span>, <span class="function"><span class="keyword">function</span> (<span class="params">snapshot</span>) </span>&#123;</span><br><span class="line">  snapshot.forEach(<span class="function"><span class="keyword">function</span> (<span class="params">item</span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(item.key, item.val());</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>這時候 console 就會是 josh 這筆資料了</p>
+]]></content>
+      <categories>
+        <category>firebase</category>
+      </categories>
+      <tags>
+        <tag>firebase</tag>
+      </tags>
+  </entry>
 </search>
