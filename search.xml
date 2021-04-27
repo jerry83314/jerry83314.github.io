@@ -209,4 +209,81 @@
         <tag>firebase</tag>
       </tags>
   </entry>
+  <entry>
+    <title>Express 初體驗</title>
+    <url>/2021/04/26/Express-%E5%88%9D%E9%AB%94%E9%A9%97/</url>
+    <content><![CDATA[<p>express 為一款 node.js 輕量型 Web 應用式框架，可以結合資料庫做開發，包含前面的 Firebase</p>
+<hr>
+<h4 id="環境準備"><a href="#環境準備" class="headerlink" title="環境準備"></a>環境準備</h4><p>當新增好資料夾之後，用終端機移動到那個資料夾底下，輸入 <code>npm init</code><br>接著會出現 package.json 檔案，就代表成功，之後輸入 <code>npm install express --save</code><br>就可以發現 package.json 內的 dependencies 多了 express 就成功了</p>
+<hr>
+<h4 id="開始使用-express"><a href="#開始使用-express" class="headerlink" title="開始使用 express"></a>開始使用 express</h4><p>新增一支 JS 檔，開始引用 express</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> express = <span class="built_in">require</span>(<span class="string">&#x27;express&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> app = express();</span><br></pre></td></tr></table></figure>
+<p>這時候可以用 console 看一下 app，如果有各種屬性跟 function 就代表是引用成功的</p>
+<hr>
+<h4 id="開啟-web-伺服器"><a href="#開啟-web-伺服器" class="headerlink" title="開啟 web 伺服器"></a>開啟 web 伺服器</h4><p>接著就來開啟 web 伺服器</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line">app.get(<span class="string">&#x27;/&#x27;</span>, <span class="function"><span class="keyword">function</span>(<span class="params">req, res</span>) </span>&#123;</span><br><span class="line">  res.send(<span class="string">&#x27;Hello World&#x27;</span>);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 設定要監聽的 port</span></span><br><span class="line"><span class="keyword">const</span> port = process.env.PORT || <span class="number">5000</span>;</span><br><span class="line">app.listen(port);</span><br></pre></td></tr></table></figure>
+<p>這個時候打開 <code>localhost:5000</code> 就可以看到 Hello World 了</p>
+]]></content>
+      <categories>
+        <category>node</category>
+        <category>express</category>
+      </categories>
+      <tags>
+        <tag>node</tag>
+        <tag>express</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Express 路由設計</title>
+    <url>/2021/04/27/Express-%E8%B7%AF%E7%94%B1%E8%A8%AD%E8%A8%88/</url>
+    <content><![CDATA[<p>前一篇講到了啟用 web 伺服器，那接下來就來介紹路由設計的部分</p>
+<h4 id="一般的路由"><a href="#一般的路由" class="headerlink" title="一般的路由"></a>一般的路由</h4><p>較為一般的路由，可以設計如下:</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line">app.get(<span class="string">&#x27;/user&#x27;</span>, <span class="function"><span class="keyword">function</span>(<span class="params">req, res</span>) </span>&#123;</span><br><span class="line">  res.send(<span class="string">&#x27;USER&#x27;</span>);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">app.get(<span class="string">&#x27;/email&#x27;</span>, <span class="function"><span class="keyword">function</span>(<span class="params">req, res</span>) </span>&#123;</span><br><span class="line">  res.send(<span class="string">&#x27;EMAIL&#x27;</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>這個時候 localhost:5000/user 頁面上會出現 USER<br>如果是 localhost:5000/email 頁面上會出現 EMAIL</p>
+<hr>
+<h4 id="動態路由"><a href="#動態路由" class="headerlink" title="動態路由"></a>動態路由</h4><p>動態路由的意思是指，有時候網址會出現隨機亂碼的部分，這就是由動態路由產生的<br>假設今天想要路由是 <code>/user/隨機輸入的名字</code><br>這個時候就可以這樣設計:</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 動態的部分前面加上冒號，並給予一個變數</span></span><br><span class="line">app.get(<span class="string">&#x27;/user/:name&#x27;</span>, <span class="function"><span class="keyword">function</span>(<span class="params">req, res</span>) </span>&#123;</span><br><span class="line">  <span class="comment">// 透過 request 的請求使用 params 的方式讀取變數，取得動態路由的參數</span></span><br><span class="line">  <span class="keyword">const</span> myName = req.params.name</span><br><span class="line">  <span class="comment">// 呈現在頁面上</span></span><br><span class="line">  res.send(myName);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>如果這時候輸入 localhost:5000/user/tom，頁面上就會出現 tom<br>如果輸入 localhost:5000/user/jerry，頁面就會出現 jerry</p>
+<hr>
+<h4 id="帶有參數的路由"><a href="#帶有參數的路由" class="headerlink" title="帶有參數的路由"></a>帶有參數的路由</h4><p>有時候網址會帶有 <code>?參數=值</code> 的方式做請求，那如果想要去讀取網址的參數的值該如何做？<br>假設發出請求的網址是這樣 <code>localhost:5000/user/jerry?limit=10</code><br>這時候要如何去讀取 limit 參數的值？</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line">app.get(<span class="string">&#x27;/user/:name&#x27;</span>, <span class="function"><span class="keyword">function</span>(<span class="params">req, res</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> myName = req.params.name</span><br><span class="line">  <span class="comment">// 利用 request 的 query 方式讀取參數，就可以取到值</span></span><br><span class="line">  <span class="keyword">const</span> str = req.query.limit</span><br><span class="line">  <span class="built_in">console</span>.log(str)</span><br><span class="line">  res.send(myName);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>這時候 console 看就可以看到 limit 的值了</p>
+]]></content>
+      <categories>
+        <category>node</category>
+        <category>express</category>
+      </categories>
+      <tags>
+        <tag>node</tag>
+        <tag>express</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Express middleware介紹</title>
+    <url>/2021/04/27/Express-middleware%E4%BB%8B%E7%B4%B9/</url>
+    <content><![CDATA[<p>這篇來介紹 middleware，如果用比較白話的方式來介紹的話，就是類似守門員的概念<br>通常一個網站，某些頁面可能需要一些權限才能進去，例如: 已登入的狀態才能造訪<br>而 middleware(中介軟體)，就會在使用者進入這些路由前，先進行驗證的動作 ~</p>
+<h4 id="簡單寫一個-middleware"><a href="#簡單寫一個-middleware" class="headerlink" title="簡單寫一個 middleware"></a>簡單寫一個 middleware</h4><p>先簡單寫一個 middleware</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line">app.use(<span class="function"><span class="keyword">function</span>(<span class="params">req, res, next</span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">&#x27;有人進來了&#x27;</span>);</span><br><span class="line">  next();</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>上述就是一個簡單的 middleware 的範例，middleware 通常比較重要的是擺放的位置，哪些路由需要經過驗證的就擺在它前面，相當於守門員擋在前面，而 <code>next();</code> 也很重要，app.use() 內的 function 就算通過了，但是沒有加 <code>next();</code> 守門員也不會放人，那只能有一位守門員嗎？<br>當然不只，一個路由前面可以有很多的 middleware，就看你想要驗證什麼了</p>
+<p>假設想要在進來首頁時，先驗證有沒有登入，就可以這樣寫:</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line">app.use(<span class="function"><span class="keyword">function</span>(<span class="params">req, res, next</span>) </span>&#123;</span><br><span class="line">  <span class="comment">// 驗證登入的程式碼可以寫在這</span></span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">&#x27;已是登入狀態&#x27;</span>);</span><br><span class="line">  next();</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 前面驗證成功，就可以進到首頁</span></span><br><span class="line">app.get(<span class="string">&#x27;/&#x27;</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  res.send(<span class="string">&#x27;index&#x27;</span>);</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<hr>
+<h4 id="重複利用的-middleware"><a href="#重複利用的-middleware" class="headerlink" title="重複利用的 middleware"></a>重複利用的 middleware</h4><p>假設我們登入的 function，會在很多地方都用到，那就可以改成這樣寫:</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> login = <span class="function"><span class="keyword">function</span>(<span class="params">req, res, next</span>) </span>&#123;</span><br><span class="line">  <span class="comment">// 驗證登入的程式碼可以寫在這</span></span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">&#x27;已是登入狀態&#x27;</span>);</span><br><span class="line">  next();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">app.use(login);</span><br></pre></td></tr></table></figure>
+<p>除了上述的方式，也可以把 middleware 的 function 放在 app.get() 中間，如:</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 進到首頁後，會先進行 login 的 function，如果沒有通過，就不會執行後面的 function</span></span><br><span class="line">app.get(<span class="string">&#x27;/&#x27;</span>, login, <span class="function"><span class="keyword">function</span>(<span class="params">req, res</span>) </span>&#123;</span><br><span class="line">  res.send(<span class="string">&#x27;index&#x27;</span>);</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<hr>
+<h4 id="使用-app-use-放置靜態檔案"><a href="#使用-app-use-放置靜態檔案" class="headerlink" title="使用 app.use() 放置靜態檔案"></a>使用 app.use() 放置靜態檔案</h4><p>如果要放置靜態檔案，例如:照片，這時候該怎麼放置？</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 從 public 資料夾取用靜態資源</span></span><br><span class="line">app.use(express.static(<span class="string">&#x27;public&#x27;</span>))</span><br></pre></td></tr></table></figure>
+<p>記得新增 public 資料夾，接著就可以使用靜態檔案了</p>
+]]></content>
+      <categories>
+        <category>node</category>
+        <category>express</category>
+      </categories>
+      <tags>
+        <tag>node</tag>
+        <tag>express</tag>
+      </tags>
+  </entry>
 </search>

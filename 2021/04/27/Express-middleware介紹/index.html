@@ -20,20 +20,21 @@
     var CONFIG = {"hostname":"jerry83314.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="假設 firebase 已經有資料了，要新增一筆資料到既有資料的 firebase 內，該怎麼做？...">
+  <meta name="description" content="這篇來介紹 middleware(中介軟體)，就是類似守門員的概念...">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Firebase 新增和移除資料">
-<meta property="og:url" content="https://jerry83314.github.io/2021/04/24/firebase%20%E6%96%B0%E5%A2%9E%E5%92%8C%E7%A7%BB%E9%99%A4%E8%B3%87%E6%96%99/index.html">
+<meta property="og:title" content="Express middleware介紹">
+<meta property="og:url" content="https://jerry83314.github.io/2021/04/27/Express-middleware%E4%BB%8B%E7%B4%B9/index.html">
 <meta property="og:site_name" content="傑瑞的技術日記">
-<meta property="og:description" content="假設 firebase 已經有資料了，要新增一筆資料到既有資料的 firebase 內，該怎麼做？...">
+<meta property="og:description" content="這篇來介紹 middleware(中介軟體)，就是類似守門員的概念...">
 <meta property="og:locale" content="zh_TW">
-<meta property="article:published_time" content="2021-04-24T14:14:43.000Z">
-<meta property="article:modified_time" content="2021-04-25T14:55:09.248Z">
+<meta property="article:published_time" content="2021-04-27T11:01:16.000Z">
+<meta property="article:modified_time" content="2021-04-27T15:22:10.178Z">
 <meta property="article:author" content="Jerry Huang">
-<meta property="article:tag" content="firebase">
+<meta property="article:tag" content="node">
+<meta property="article:tag" content="express">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="https://jerry83314.github.io/2021/04/24/firebase%20%E6%96%B0%E5%A2%9E%E5%92%8C%E7%A7%BB%E9%99%A4%E8%B3%87%E6%96%99/">
+<link rel="canonical" href="https://jerry83314.github.io/2021/04/27/Express-middleware%E4%BB%8B%E7%B4%B9/">
 
 
 <script id="page-configurations">
@@ -46,7 +47,7 @@
   };
 </script>
 
-  <title>Firebase 新增和移除資料 | 傑瑞的技術日記</title>
+  <title>Express middleware介紹 | 傑瑞的技術日記</title>
   
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-C6JZKRV0VH"></script>
     <script>
@@ -204,7 +205,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-TW">
-    <link itemprop="mainEntityOfPage" href="https://jerry83314.github.io/2021/04/24/firebase%20%E6%96%B0%E5%A2%9E%E5%92%8C%E7%A7%BB%E9%99%A4%E8%B3%87%E6%96%99/">
+    <link itemprop="mainEntityOfPage" href="https://jerry83314.github.io/2021/04/27/Express-middleware%E4%BB%8B%E7%B4%B9/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="https://i.imgur.com/RQNIZ3m.png">
@@ -217,7 +218,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Firebase 新增和移除資料
+          Express middleware介紹
         </h1>
 
         <div class="post-meta">
@@ -227,7 +228,7 @@
               </span>
               <span class="post-meta-item-text">發表於</span>
 
-              <time title="創建時間：2021-04-24 22:14:43" itemprop="dateCreated datePublished" datetime="2021-04-24T22:14:43+08:00">2021-04-24</time>
+              <time title="創建時間：2021-04-27 19:01:16" itemprop="dateCreated datePublished" datetime="2021-04-27T19:01:16+08:00">2021-04-27</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -235,12 +236,16 @@
               </span>
               <span class="post-meta-item-text">分類於</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/firebase/" itemprop="url" rel="index"><span itemprop="name">firebase</span></a>
+                  <a href="/categories/node/" itemprop="url" rel="index"><span itemprop="name">node</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/node/express/" itemprop="url" rel="index"><span itemprop="name">express</span></a>
                 </span>
             </span>
 
           
-            <div class="post-description">假設 firebase 已經有資料了，要新增一筆資料到既有資料的 firebase 內，該怎麼做？...</div>
+            <div class="post-description">這篇來介紹 middleware(中介軟體)，就是類似守門員的概念...</div>
 
         </div>
       </header>
@@ -251,17 +256,21 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>前面有講到 <code>.set()</code> 新增資料到 firebase 內<br>假設 firebase 已經有資料了，要新增一筆資料到既有資料的 firebase 內，該怎麼做？<br>這時候可以使用 <code>.push()</code></p>
-<h4 id="先找到根目錄"><a href="#先找到根目錄" class="headerlink" title="先找到根目錄"></a>先找到根目錄</h4><p>類似移動到根目錄</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> ref = firebase.database().ref();</span><br></pre></td></tr></table></figure>
-<h4 id="善用-child-找到要新增資料的節點"><a href="#善用-child-找到要新增資料的節點" class="headerlink" title="善用 .child() 找到要新增資料的節點"></a>善用 .child() 找到要新增資料的節點</h4><p>可以運用 .child() 來找到要放置資料的地方，假設新增的資料要放在 about 底下，就可以這樣寫</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ref.child(<span class="string">&#x27;about&#x27;</span>);</span><br></pre></td></tr></table></figure>
-<h4 id="運用-push-新增資料"><a href="#運用-push-新增資料" class="headerlink" title="運用 .push() 新增資料"></a>運用 .push() 新增資料</h4><p>上面移動到 about 底下之後，就可以使用 .push() 來新增資料，為一個物件格式</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ref.child(<span class="string">&#x27;about&#x27;</span>).push(&#123; <span class="attr">test</span>: <span class="string">&#x27;test&#x27;</span> &#125;);</span><br></pre></td></tr></table></figure>
-<p>這個時候到 firebase 看，about 底下就會多一筆物件資料，而且是有一組亂碼編號的，這個亂碼編號很重要，因為刪除就必須要使用到它</p>
-<h4 id="remove-移除資料"><a href="#remove-移除資料" class="headerlink" title=".remove() 移除資料"></a>.remove() 移除資料</h4><p>上述提到的亂碼編號，就可以這樣寫來刪除資料:</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// -MZ3F2vUp5n7KPLfa1ls 是我新增資料的亂碼編號</span></span><br><span class="line">ref.child(<span class="string">&#x27;about&#x27;</span>).child(<span class="string">&#x27;-MZ3F2vUp5n7KPLfa1ls&#x27;</span>).remove();</span><br></pre></td></tr></table></figure>
-<p>上述的方法，融會貫通之後，可以交錯的使用來新增移除資料</p>
+        <p>這篇來介紹 middleware，如果用比較白話的方式來介紹的話，就是類似守門員的概念<br>通常一個網站，某些頁面可能需要一些權限才能進去，例如: 已登入的狀態才能造訪<br>而 middleware(中介軟體)，就會在使用者進入這些路由前，先進行驗證的動作 ~</p>
+<h4 id="簡單寫一個-middleware"><a href="#簡單寫一個-middleware" class="headerlink" title="簡單寫一個 middleware"></a>簡單寫一個 middleware</h4><p>先簡單寫一個 middleware</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">app.use(<span class="function"><span class="keyword">function</span>(<span class="params">req, res, next</span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">&#x27;有人進來了&#x27;</span>);</span><br><span class="line">  next();</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>上述就是一個簡單的 middleware 的範例，middleware 通常比較重要的是擺放的位置，哪些路由需要經過驗證的就擺在它前面，相當於守門員擋在前面，而 <code>next();</code> 也很重要，app.use() 內的 function 就算通過了，但是沒有加 <code>next();</code> 守門員也不會放人，那只能有一位守門員嗎？<br>當然不只，一個路由前面可以有很多的 middleware，就看你想要驗證什麼了</p>
+<p>假設想要在進來首頁時，先驗證有沒有登入，就可以這樣寫:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">app.use(<span class="function"><span class="keyword">function</span>(<span class="params">req, res, next</span>) </span>&#123;</span><br><span class="line">  <span class="comment">// 驗證登入的程式碼可以寫在這</span></span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">&#x27;已是登入狀態&#x27;</span>);</span><br><span class="line">  next();</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 前面驗證成功，就可以進到首頁</span></span><br><span class="line">app.get(<span class="string">&#x27;/&#x27;</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  res.send(<span class="string">&#x27;index&#x27;</span>);</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<hr>
+<h4 id="重複利用的-middleware"><a href="#重複利用的-middleware" class="headerlink" title="重複利用的 middleware"></a>重複利用的 middleware</h4><p>假設我們登入的 function，會在很多地方都用到，那就可以改成這樣寫:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> login = <span class="function"><span class="keyword">function</span>(<span class="params">req, res, next</span>) </span>&#123;</span><br><span class="line">  <span class="comment">// 驗證登入的程式碼可以寫在這</span></span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">&#x27;已是登入狀態&#x27;</span>);</span><br><span class="line">  next();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">app.use(login);</span><br></pre></td></tr></table></figure>
+<p>除了上述的方式，也可以把 middleware 的 function 放在 app.get() 中間，如:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 進到首頁後，會先進行 login 的 function，如果沒有通過，就不會執行後面的 function</span></span><br><span class="line">app.get(<span class="string">&#x27;/&#x27;</span>, login, <span class="function"><span class="keyword">function</span>(<span class="params">req, res</span>) </span>&#123;</span><br><span class="line">  res.send(<span class="string">&#x27;index&#x27;</span>);</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<hr>
+<h4 id="使用-app-use-放置靜態檔案"><a href="#使用-app-use-放置靜態檔案" class="headerlink" title="使用 app.use() 放置靜態檔案"></a>使用 app.use() 放置靜態檔案</h4><p>如果要放置靜態檔案，例如:照片，這時候該怎麼放置？</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 從 public 資料夾取用靜態資源</span></span><br><span class="line">app.use(express.static(<span class="string">&#x27;public&#x27;</span>))</span><br></pre></td></tr></table></figure>
+<p>記得新增 public 資料夾，接著就可以使用靜態檔案了</p>
 
     </div>
 
@@ -272,7 +281,8 @@
       <footer class="post-footer">
           
           <div class="post-tags">
-              <a href="/tags/firebase/" rel="tag"><i class="fa fa-tag"></i> firebase</a>
+              <a href="/tags/node/" rel="tag"><i class="fa fa-tag"></i> node</a>
+              <a href="/tags/express/" rel="tag"><i class="fa fa-tag"></i> express</a>
           </div>
 
         
@@ -281,13 +291,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2021/04/24/firebase%20%E9%A1%AF%E7%A4%BA%E8%B3%87%E6%96%99%E5%88%B0%E7%B6%B2%E9%A0%81%E4%B8%8A/" rel="prev" title="Firebase 顯示資料到網頁上">
-      <i class="fa fa-chevron-left"></i> Firebase 顯示資料到網頁上
+    <a href="/2021/04/27/Express-%E8%B7%AF%E7%94%B1%E8%A8%AD%E8%A8%88/" rel="prev" title="Express 路由設計">
+      <i class="fa fa-chevron-left"></i> Express 路由設計
     </a></div>
-      <div class="post-nav-item">
-    <a href="/2021/04/24/firebase%20TodoList%20%E5%AF%A6%E4%BD%9C/" rel="next" title="Firebase TodoList 實作">
-      Firebase TodoList 實作 <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -346,7 +353,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%85%88%E6%89%BE%E5%88%B0%E6%A0%B9%E7%9B%AE%E9%8C%84"><span class="nav-number">1.</span> <span class="nav-text">先找到根目錄</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%96%84%E7%94%A8-child-%E6%89%BE%E5%88%B0%E8%A6%81%E6%96%B0%E5%A2%9E%E8%B3%87%E6%96%99%E7%9A%84%E7%AF%80%E9%BB%9E"><span class="nav-number">2.</span> <span class="nav-text">善用 .child() 找到要新增資料的節點</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%81%8B%E7%94%A8-push-%E6%96%B0%E5%A2%9E%E8%B3%87%E6%96%99"><span class="nav-number">3.</span> <span class="nav-text">運用 .push() 新增資料</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#remove-%E7%A7%BB%E9%99%A4%E8%B3%87%E6%96%99"><span class="nav-number">4.</span> <span class="nav-text">.remove() 移除資料</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%B0%A1%E5%96%AE%E5%AF%AB%E4%B8%80%E5%80%8B-middleware"><span class="nav-number">1.</span> <span class="nav-text">簡單寫一個 middleware</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%87%8D%E8%A4%87%E5%88%A9%E7%94%A8%E7%9A%84-middleware"><span class="nav-number">2.</span> <span class="nav-text">重複利用的 middleware</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8-app-use-%E6%94%BE%E7%BD%AE%E9%9D%9C%E6%85%8B%E6%AA%94%E6%A1%88"><span class="nav-number">3.</span> <span class="nav-text">使用 app.use() 放置靜態檔案</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
