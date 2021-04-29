@@ -20,21 +20,22 @@
     var CONFIG = {"hostname":"jerry83314.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="前一篇講到了啟用 web 伺服器，那接下來就來介紹路由設計的部分...">
+  <meta name="description" content="引入了第一支 EJS，接下來就要來介紹參數的部分，因為通常會傳入資料進去 EJS 渲染 HTML 頁面...">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Express 路由設計">
-<meta property="og:url" content="https://jerry83314.github.io/2021/04/27/Express-%E8%B7%AF%E7%94%B1%E8%A8%AD%E8%A8%88/index.html">
+<meta property="og:title" content="Express EJS 參數導入">
+<meta property="og:url" content="https://jerry83314.github.io/2021/04/29/Express-EJS-%E5%8F%83%E6%95%B8%E5%B0%8E%E5%85%A5/index.html">
 <meta property="og:site_name" content="傑瑞的技術日記">
-<meta property="og:description" content="前一篇講到了啟用 web 伺服器，那接下來就來介紹路由設計的部分...">
+<meta property="og:description" content="引入了第一支 EJS，接下來就要來介紹參數的部分，因為通常會傳入資料進去 EJS 渲染 HTML 頁面...">
 <meta property="og:locale" content="zh_TW">
-<meta property="article:published_time" content="2021-04-27T10:13:33.000Z">
-<meta property="article:modified_time" content="2021-04-27T10:30:12.671Z">
+<meta property="article:published_time" content="2021-04-29T08:30:25.000Z">
+<meta property="article:modified_time" content="2021-04-29T09:21:47.080Z">
 <meta property="article:author" content="Jerry Huang">
 <meta property="article:tag" content="node">
 <meta property="article:tag" content="express">
+<meta property="article:tag" content="ejs">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="https://jerry83314.github.io/2021/04/27/Express-%E8%B7%AF%E7%94%B1%E8%A8%AD%E8%A8%88/">
+<link rel="canonical" href="https://jerry83314.github.io/2021/04/29/Express-EJS-%E5%8F%83%E6%95%B8%E5%B0%8E%E5%85%A5/">
 
 
 <script id="page-configurations">
@@ -47,7 +48,7 @@
   };
 </script>
 
-  <title>Express 路由設計 | 傑瑞的技術日記</title>
+  <title>Express EJS 參數導入 | 傑瑞的技術日記</title>
   
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-C6JZKRV0VH"></script>
     <script>
@@ -205,7 +206,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-TW">
-    <link itemprop="mainEntityOfPage" href="https://jerry83314.github.io/2021/04/27/Express-%E8%B7%AF%E7%94%B1%E8%A8%AD%E8%A8%88/">
+    <link itemprop="mainEntityOfPage" href="https://jerry83314.github.io/2021/04/29/Express-EJS-%E5%8F%83%E6%95%B8%E5%B0%8E%E5%85%A5/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="https://i.imgur.com/RQNIZ3m.png">
@@ -218,7 +219,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Express 路由設計
+          Express EJS 參數導入
         </h1>
 
         <div class="post-meta">
@@ -228,7 +229,7 @@
               </span>
               <span class="post-meta-item-text">發表於</span>
 
-              <time title="創建時間：2021-04-27 18:13:33" itemprop="dateCreated datePublished" datetime="2021-04-27T18:13:33+08:00">2021-04-27</time>
+              <time title="創建時間：2021-04-29 16:30:25" itemprop="dateCreated datePublished" datetime="2021-04-29T16:30:25+08:00">2021-04-29</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -242,10 +243,14 @@
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
                   <a href="/categories/node/express/" itemprop="url" rel="index"><span itemprop="name">express</span></a>
                 </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/node/express/ejs/" itemprop="url" rel="index"><span itemprop="name">ejs</span></a>
+                </span>
             </span>
 
           
-            <div class="post-description">前一篇講到了啟用 web 伺服器，那接下來就來介紹路由設計的部分...</div>
+            <div class="post-description">引入了第一支 EJS，接下來就要來介紹參數的部分，因為通常會傳入資料進去 EJS 渲染 HTML 頁面...</div>
 
         </div>
       </header>
@@ -256,18 +261,33 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>前一篇講到了啟用 web 伺服器，那接下來就來介紹路由設計的部分</p>
-<h4 id="一般的路由"><a href="#一般的路由" class="headerlink" title="一般的路由"></a>一般的路由</h4><p>較為一般的路由，可以設計如下:</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">app.get(<span class="string">&#x27;/user&#x27;</span>, <span class="function"><span class="keyword">function</span>(<span class="params">req, res</span>) </span>&#123;</span><br><span class="line">  res.send(<span class="string">&#x27;USER&#x27;</span>);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">app.get(<span class="string">&#x27;/email&#x27;</span>, <span class="function"><span class="keyword">function</span>(<span class="params">req, res</span>) </span>&#123;</span><br><span class="line">  res.send(<span class="string">&#x27;EMAIL&#x27;</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-<p>這個時候 localhost:5000/user 頁面上會出現 USER<br>如果是 localhost:5000/email 頁面上會出現 EMAIL</p>
+        <p>前面成功的引入了第一支 EJS，接下來就要來介紹參數的部分<br>因為通常會傳入資料進去 EJS 渲染 HTML 頁面，這時候就要知道如何處理資料了</p>
+<h4 id="基礎參數導入"><a href="#基礎參數導入" class="headerlink" title="基礎參數導入"></a>基礎參數導入</h4><p>在 route 的地方，帶入參數:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">app.get(<span class="string">&#x27;/&#x27;</span>, <span class="function"><span class="keyword">function</span>(<span class="params">req, res</span>) </span>&#123;</span><br><span class="line">  <span class="comment">// 用物件的方式帶入參數</span></span><br><span class="line">  res.render(<span class="string">&#x27;index&#x27;</span>, &#123;</span><br><span class="line">    title: <span class="string">&#x27;My EJS&#x27;</span>,</span><br><span class="line">    content: <span class="string">&#x27;LOREM&#x27;</span>,</span><br><span class="line">    tag: <span class="string">&#x27;&lt;p&gt;這是 HTML 標籤&lt;/p&gt;&#x27;</span>,</span><br><span class="line">    name: [<span class="string">&#x27;Jerry&#x27;</span>, <span class="string">&#x27;Tom&#x27;</span>, <span class="string">&#x27;John&#x27;</span>]</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>接著就可以在 index.ejs 內使用這些參數資料:</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">h1</span>&gt;</span>&lt;%= title %&gt;<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">p</span>&gt;</span>&lt;%= content %&gt;<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>這時候就可以在頁面看到帶入的參數了</p>
 <hr>
-<h4 id="動態路由"><a href="#動態路由" class="headerlink" title="動態路由"></a>動態路由</h4><p>動態路由的意思是指，有時候網址會出現隨機亂碼的部分，這就是由動態路由產生的<br>假設今天想要路由是 <code>/user/隨機輸入的名字</code><br>這個時候就可以這樣設計:</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 動態的部分前面加上冒號，並給予一個變數</span></span><br><span class="line">app.get(<span class="string">&#x27;/user/:name&#x27;</span>, <span class="function"><span class="keyword">function</span>(<span class="params">req, res</span>) </span>&#123;</span><br><span class="line">  <span class="comment">// 透過 request 的請求使用 params 的方式讀取變數，取得動態路由的參數</span></span><br><span class="line">  <span class="keyword">const</span> myName = req.params.name</span><br><span class="line">  <span class="comment">// 呈現在頁面上</span></span><br><span class="line">  res.send(myName);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-<p>如果這時候輸入 localhost:5000/user/tom，頁面上就會出現 tom<br>如果輸入 localhost:5000/user/jerry，頁面就會出現 jerry</p>
+<h4 id="顯示的內容種類"><a href="#顯示的內容種類" class="headerlink" title="顯示的內容種類"></a>顯示的內容種類</h4><p>如果今天帶入的參數是一串 HTML 標籤包著文字，要顯示到頁面上的話，就會連標籤一起顯示出來<br>這時候寫法就要改一下:</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;%- tag %&gt;</span><br></pre></td></tr></table></figure>
+<p>這時候在頁面上就不會把 HTML 標籤當成文字輸出，而是真正的使用到標籤</p>
 <hr>
-<h4 id="帶有參數的路由"><a href="#帶有參數的路由" class="headerlink" title="帶有參數的路由"></a>帶有參數的路由</h4><p>有時候網址會帶有 <code>?參數=值</code> 的方式做請求，那如果想要去讀取網址的參數的值該如何做？<br>假設發出請求的網址是這樣 <code>localhost:5000/user/jerry?limit=10</code><br>這時候要如何去讀取 limit 參數的值？</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">app.get(<span class="string">&#x27;/user/:name&#x27;</span>, <span class="function"><span class="keyword">function</span>(<span class="params">req, res</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> myName = req.params.name</span><br><span class="line">  <span class="comment">// 利用 request 的 query 方式讀取參數，就可以取到值</span></span><br><span class="line">  <span class="keyword">const</span> str = req.query.limit</span><br><span class="line">  <span class="built_in">console</span>.log(str)</span><br><span class="line">  res.send(myName);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-<p>這時候 console 看就可以看到 limit 的值了</p>
+<h4 id="加入判斷"><a href="#加入判斷" class="headerlink" title="加入判斷"></a>加入判斷</h4><p>在 EJS 內也是可以加入判斷式的，寫法會如下:</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;% if(true) &#123; %&gt;</span><br><span class="line">  &lt;%- tag %&gt;</span><br><span class="line">&lt;% &#125; %&gt;</span><br></pre></td></tr></table></figure>
+<p>這時候就會按照 true 或 false 來判斷是否呈現該資料</p>
+<hr>
+<h4 id="參數若為陣列"><a href="#參數若為陣列" class="headerlink" title="參數若為陣列"></a>參數若為陣列</h4><p>如果參數為陣列，想要每一筆都渲染在頁面上，這時候可以寫 for 迴圈，寫法會如下:</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">ul</span>&gt;</span></span><br><span class="line">  &lt;% for(let i=0; i&lt;name.length; i++) &#123; %&gt;</span><br><span class="line">    <span class="tag">&lt;<span class="name">li</span>&gt;</span>&lt;%= name[i] %&gt;<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">  &lt;% &#125; %&gt;</span><br><span class="line"><span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>這裡會發現，不管是寫 JS 的判斷或者是迴圈，最重要的就是要有 <code>&lt;% %&gt;</code> 來做包覆</p>
+<hr>
+<h4 id="設定-layout"><a href="#設定-layout" class="headerlink" title="設定 layout"></a>設定 layout</h4><p>講到這裡，要來介紹一下 layout，顧名思義就是就算有成千上百萬頁，但固定會長一樣的東西，這樣如果哪邊需要做修改，僅只需要修改一個 layout 檔，並不需要修改成千上百萬頁<br>前面我們有新增了 index.ejs，現在新增一個 user.ejs 和 layout.ejs</p>
+<p>layout.ejs 就放 head 和 body 的部分:</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">&quot;en&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">&quot;UTF-8&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">&quot;viewport&quot;</span> <span class="attr">content</span>=<span class="string">&quot;width=device-width, initial-scale=1.0&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>Document<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">  &lt;%- body %&gt;</span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>user.ejs 放一個 h2 標籤且引入我們的 layout.ejs:</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;% layout(&#x27;layout&#x27;) %&gt;</span><br><span class="line"><span class="tag">&lt;<span class="name">h2</span>&gt;</span>USER<span class="tag">&lt;/<span class="name">h2</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>記得 route 的部分也要新增一下:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">app.get(<span class="string">&#x27;/user&#x27;</span>, <span class="function"><span class="keyword">function</span>(<span class="params">req, res</span>) </span>&#123;</span><br><span class="line">  res.render(<span class="string">&#x27;user&#x27;</span>)</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>這個時候看 localhost/user 就會發現，它會自動把 head 和 body 都渲染進去<br>這個就是 layout 的功用，當然還可以運用在很多地方，期待大家慢慢挖掘囉~~~</p>
 
     </div>
 
@@ -280,6 +300,7 @@
           <div class="post-tags">
               <a href="/tags/node/" rel="tag"><i class="fa fa-tag"></i> node</a>
               <a href="/tags/express/" rel="tag"><i class="fa fa-tag"></i> express</a>
+              <a href="/tags/ejs/" rel="tag"><i class="fa fa-tag"></i> ejs</a>
           </div>
 
         
@@ -288,13 +309,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2021/04/26/Express-%E5%88%9D%E9%AB%94%E9%A9%97/" rel="prev" title="Express 初體驗">
-      <i class="fa fa-chevron-left"></i> Express 初體驗
+    <a href="/2021/04/29/Express-EJS-%E4%BB%8B%E7%B4%B9%E8%88%87%E5%AE%89%E8%A3%9D/" rel="prev" title="Express EJS 介紹與安裝">
+      <i class="fa fa-chevron-left"></i> Express EJS 介紹與安裝
     </a></div>
-      <div class="post-nav-item">
-    <a href="/2021/04/27/Express-middleware%E4%BB%8B%E7%B4%B9/" rel="next" title="Express middleware介紹">
-      Express middleware介紹 <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -353,7 +371,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%80%E8%88%AC%E7%9A%84%E8%B7%AF%E7%94%B1"><span class="nav-number">1.</span> <span class="nav-text">一般的路由</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8B%95%E6%85%8B%E8%B7%AF%E7%94%B1"><span class="nav-number">2.</span> <span class="nav-text">動態路由</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B8%B6%E6%9C%89%E5%8F%83%E6%95%B8%E7%9A%84%E8%B7%AF%E7%94%B1"><span class="nav-number">3.</span> <span class="nav-text">帶有參數的路由</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9F%BA%E7%A4%8E%E5%8F%83%E6%95%B8%E5%B0%8E%E5%85%A5"><span class="nav-number">1.</span> <span class="nav-text">基礎參數導入</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%A1%AF%E7%A4%BA%E7%9A%84%E5%85%A7%E5%AE%B9%E7%A8%AE%E9%A1%9E"><span class="nav-number">2.</span> <span class="nav-text">顯示的內容種類</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8A%A0%E5%85%A5%E5%88%A4%E6%96%B7"><span class="nav-number">3.</span> <span class="nav-text">加入判斷</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%83%E6%95%B8%E8%8B%A5%E7%82%BA%E9%99%A3%E5%88%97"><span class="nav-number">4.</span> <span class="nav-text">參數若為陣列</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%A8%AD%E5%AE%9A-layout"><span class="nav-number">5.</span> <span class="nav-text">設定 layout</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
