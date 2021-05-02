@@ -223,6 +223,8 @@
 <h4 id="開啟-web-伺服器"><a href="#開啟-web-伺服器" class="headerlink" title="開啟 web 伺服器"></a>開啟 web 伺服器</h4><p>接著就來開啟 web 伺服器</p>
 <figure class="highlight js"><table><tr><td class="code"><pre><span class="line">app.get(<span class="string">&#x27;/&#x27;</span>, <span class="function"><span class="keyword">function</span>(<span class="params">req, res</span>) </span>&#123;</span><br><span class="line">  res.send(<span class="string">&#x27;Hello World&#x27;</span>);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 設定要監聽的 port</span></span><br><span class="line"><span class="keyword">const</span> port = process.env.PORT || <span class="number">5000</span>;</span><br><span class="line">app.listen(port);</span><br></pre></td></tr></table></figure>
 <p>這個時候打開 <code>localhost:5000</code> 就可以看到 Hello World 了</p>
+<hr>
+<h4 id="使用-Express-generator-快速建立環境-2021-04-30-更新"><a href="#使用-Express-generator-快速建立環境-2021-04-30-更新" class="headerlink" title="使用 Express-generator 快速建立環境(2021/04/30 更新)"></a>使用 Express-generator 快速建立環境(2021/04/30 更新)</h4><p>整合了前面幾篇講解到的東西，包含路由，EJS … 等，其實這些可以不用自己一一新增安裝<br>我們可以藉由 express-generator 快速建立環境<br>打開終端機輸入 <code>npm install express-generator -g</code> 安裝，且在全域<br>接著 cd 到 desktop，快速建立專案，輸入 <code>express -e 專案名稱</code> 這時候桌面上就會產生我們要的專案了</p>
 ]]></content>
       <categories>
         <category>node</category>
