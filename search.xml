@@ -465,4 +465,74 @@
         <tag>express</tag>
       </tags>
   </entry>
+  <entry>
+    <title>Express Cookie 介紹</title>
+    <url>/2021/05/03/Express-Cookie-%E4%BB%8B%E7%B4%B9/</url>
+    <content><![CDATA[<p>Cookie 為一個能夠儲存資料在瀏覽器的小型資料庫且能夠在 client 端 和 server 端讀取和寫入</p>
+<h4 id="試著在前端寫點-cookie"><a href="#試著在前端寫點-cookie" class="headerlink" title="試著在前端寫點 cookie"></a>試著在前端寫點 cookie</h4><p>首先可以先試著打開 google 搜尋首頁，試著輸入</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="built_in">document</span>.cookie</span><br></pre></td></tr></table></figure>
+<p>就會撈出一些可以撈的 cookie 資訊，一些不能撈的通常都會是 httpOnly 不能透過 JS 去撈取<br>這也是資安的關係</p>
+<p>通常寫入 cookie 會如下:</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="built_in">document</span>.cookie=<span class="string">&quot;myName=John&quot;</span></span><br></pre></td></tr></table></figure>
+<p>這時候在 cookie 看，就會多一則 myName 的資訊</p>
+<p>有時候會希望 cookie 放的內容，有時效性<br>這時候可以這樣寫:</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="built_in">document</span>.cookie=<span class="string">&quot;myName=John; expires=GMT時間字串;&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// expires 內放的是 GMT 時間字串</span></span><br><span class="line"><span class="comment">// 可以用 new Date().toGMTString() 來查詢</span></span><br></pre></td></tr></table></figure>
+<p>另外一個寫法是，假設想要 10 秒過後失效:</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="built_in">document</span>.cookie=<span class="string">&quot;myName=John; max-age=10;&quot;</span></span><br></pre></td></tr></table></figure>
+<p>變成是 max-age 屬性</p>
+<hr>
+<h4 id="Express-的套件-Cookie-parser"><a href="#Express-的套件-Cookie-parser" class="headerlink" title="Express 的套件 Cookie-parser"></a>Express 的套件 Cookie-parser</h4><p>用 express-generator 快速產生一個專案後，會發現裡面有一個 cookie-parser 的套件可以做使用<br>它是用來解析 cookie 的工具<br>在 index.ejs 寫入 cookie:</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="built_in">document</span>.cookie = <span class="string">&quot;testConsole=TEST&quot;</span></span><br></pre></td></tr></table></figure>
+<p>在 routes/index.js 接收:</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line">router.get(<span class="string">&#x27;/&#x27;</span>, <span class="function"><span class="keyword">function</span>(<span class="params">req, res, next</span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(req.cookies)</span><br><span class="line">  res.render(<span class="string">&#x27;index&#x27;</span>, &#123; <span class="attr">title</span>: <span class="string">&#x27;Express&#x27;</span> &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>頁面刷新後，就會發現 console 把前端撰寫的 cookie 給帶回來後端了<br>如果今天反過來，想要從後端把資料帶進去 cookie 給前端呢？<br>一樣在 routes/index.js 撰寫，只不過這次是透過 res 下去寫:</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line">router.get(<span class="string">&#x27;/&#x27;</span>, <span class="function"><span class="keyword">function</span>(<span class="params">req, res, next</span>) </span>&#123;</span><br><span class="line">  <span class="comment">// res.cookie(&#x27;屬性&#x27;, &#x27;值&#x27;, &#123;&#125;)</span></span><br><span class="line">  res.cookie(<span class="string">&#x27;test&#x27;</span>, <span class="string">&#x27;TEST&#x27;</span>, &#123;</span><br><span class="line">    <span class="comment">// maxAge 為幾秒後消失，1000 為一秒</span></span><br><span class="line">    maxAge: <span class="number">1000</span>*<span class="number">100</span>,</span><br><span class="line">    <span class="comment">// 當 httpOnly 為 true 時，用戶不可透過 JS 撈取此 cookie</span></span><br><span class="line">    httpOnly: <span class="literal">true</span></span><br><span class="line">  &#125;)</span><br><span class="line">  res.render(<span class="string">&#x27;index&#x27;</span>, &#123; <span class="attr">title</span>: <span class="string">&#x27;Express&#x27;</span> &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>這個時候可以在 index.ejs 的 cookie 就可以看到從後端傳過來的 cookie 資訊</p>
+]]></content>
+      <categories>
+        <category>node</category>
+        <category>express</category>
+        <category>cookie</category>
+      </categories>
+      <tags>
+        <tag>node</tag>
+        <tag>express</tag>
+        <tag>cookie</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Express Cookie 介紹</title>
+    <url>/2021/05/03/Express-Cookie-%E4%BB%8B%E7%B4%B9-1/</url>
+    <content><![CDATA[<p>Cookie 為一個能夠儲存資料在瀏覽器的小型資料庫且能夠在 client 端 和 server 端讀取和寫入</p>
+<h4 id="試著在前端寫點-cookie"><a href="#試著在前端寫點-cookie" class="headerlink" title="試著在前端寫點 cookie"></a>試著在前端寫點 cookie</h4><p>首先可以先試著打開 google 搜尋首頁，試著輸入</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="built_in">document</span>.cookie</span><br></pre></td></tr></table></figure>
+<p>就會撈出一些可以撈的 cookie 資訊，一些不能撈的通常都會是 httpOnly 不能透過 JS 去撈取<br>這也是資安的關係</p>
+<p>通常寫入 cookie 會如下:</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="built_in">document</span>.cookie=<span class="string">&quot;myName=John&quot;</span></span><br></pre></td></tr></table></figure>
+<p>這時候在 cookie 看，就會多一則 myName 的資訊</p>
+<p>有時候會希望 cookie 放的內容，有時效性<br>這時候可以這樣寫:</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="built_in">document</span>.cookie=<span class="string">&quot;myName=John; expires=GMT時間字串;&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// expires 內放的是 GMT 時間字串</span></span><br><span class="line"><span class="comment">// 可以用 new Date().toGMTString() 來查詢</span></span><br></pre></td></tr></table></figure>
+<p>另外一個寫法是，假設想要 10 秒過後失效:</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="built_in">document</span>.cookie=<span class="string">&quot;myName=John; max-age=10;&quot;</span></span><br></pre></td></tr></table></figure>
+<p>變成是 max-age 屬性</p>
+<hr>
+<h4 id="Express-的套件-Cookie-parser"><a href="#Express-的套件-Cookie-parser" class="headerlink" title="Express 的套件 Cookie-parser"></a>Express 的套件 Cookie-parser</h4><p>用 express-generator 快速產生一個專案後，會發現裡面有一個 cookie-parser 的套件可以做使用<br>它是用來解析 cookie 的工具<br>在 index.ejs 寫入 cookie:</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="built_in">document</span>.cookie = <span class="string">&quot;testConsole=TEST&quot;</span></span><br></pre></td></tr></table></figure>
+<p>在 routes/index.js 接收:</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line">router.get(<span class="string">&#x27;/&#x27;</span>, <span class="function"><span class="keyword">function</span>(<span class="params">req, res, next</span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(req.cookies)</span><br><span class="line">  res.render(<span class="string">&#x27;index&#x27;</span>, &#123; <span class="attr">title</span>: <span class="string">&#x27;Express&#x27;</span> &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>頁面刷新後，就會發現 console 把前端撰寫的 cookie 給帶回來後端了<br>如果今天反過來，想要從後端把資料帶進去 cookie 給前端呢？<br>一樣在 routes/index.js 撰寫，只不過這次是透過 res 下去寫:</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line">router.get(<span class="string">&#x27;/&#x27;</span>, <span class="function"><span class="keyword">function</span>(<span class="params">req, res, next</span>) </span>&#123;</span><br><span class="line">  <span class="comment">// res.cookie(&#x27;屬性&#x27;, &#x27;值&#x27;, &#123;&#125;)</span></span><br><span class="line">  res.cookie(<span class="string">&#x27;test&#x27;</span>, <span class="string">&#x27;TEST&#x27;</span>, &#123;</span><br><span class="line">    <span class="comment">// maxAge 為幾秒後消失，1000 為一秒</span></span><br><span class="line">    maxAge: <span class="number">1000</span>*<span class="number">100</span>,</span><br><span class="line">    <span class="comment">// 當 httpOnly 為 true 時，用戶不可透過 JS 撈取此 cookie</span></span><br><span class="line">    httpOnly: <span class="literal">true</span></span><br><span class="line">  &#125;)</span><br><span class="line">  res.render(<span class="string">&#x27;index&#x27;</span>, &#123; <span class="attr">title</span>: <span class="string">&#x27;Express&#x27;</span> &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>這個時候可以在 index.ejs 的 cookie 就可以看到從後端傳過來的 cookie 資訊</p>
+]]></content>
+      <categories>
+        <category>node</category>
+        <category>express</category>
+        <category>cookie</category>
+      </categories>
+      <tags>
+        <tag>node</tag>
+        <tag>express</tag>
+        <tag>cookie</tag>
+      </tags>
+  </entry>
 </search>

@@ -20,20 +20,22 @@
     var CONFIG = {"hostname":"jerry83314.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="一大包資料，卻只要其中的一筆，這一筆在每一次進入頁面的時候都要隨機 Random...">
+  <meta name="description" content="Cookie 為一個能夠儲存資料在瀏覽器的小型資料庫且能夠在 client 端 和 server 端讀取和寫入...">
 <meta property="og:type" content="article">
-<meta property="og:title" content="JavaScript 陣列隨機取得一筆資料">
-<meta property="og:url" content="https://jerry83314.github.io/2021/03/28/%E9%99%A3%E5%88%97%E9%9A%A8%E6%A9%9F%E5%8F%96%E5%BE%97%E4%B8%80%E7%AD%86%E8%B3%87%E6%96%99/index.html">
+<meta property="og:title" content="Express Cookie 介紹">
+<meta property="og:url" content="https://jerry83314.github.io/2021/05/03/Express-Cookie-%E4%BB%8B%E7%B4%B9-1/index.html">
 <meta property="og:site_name" content="傑瑞的技術日記">
-<meta property="og:description" content="一大包資料，卻只要其中的一筆，這一筆在每一次進入頁面的時候都要隨機 Random...">
+<meta property="og:description" content="Cookie 為一個能夠儲存資料在瀏覽器的小型資料庫且能夠在 client 端 和 server 端讀取和寫入...">
 <meta property="og:locale" content="zh_TW">
-<meta property="article:published_time" content="2021-03-28T07:29:43.000Z">
-<meta property="article:modified_time" content="2021-03-28T07:43:07.797Z">
+<meta property="article:published_time" content="2021-05-03T12:46:30.000Z">
+<meta property="article:modified_time" content="2021-05-03T12:47:35.479Z">
 <meta property="article:author" content="Jerry Huang">
-<meta property="article:tag" content="JavaScript">
+<meta property="article:tag" content="node">
+<meta property="article:tag" content="express">
+<meta property="article:tag" content="cookie">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="https://jerry83314.github.io/2021/03/28/%E9%99%A3%E5%88%97%E9%9A%A8%E6%A9%9F%E5%8F%96%E5%BE%97%E4%B8%80%E7%AD%86%E8%B3%87%E6%96%99/">
+<link rel="canonical" href="https://jerry83314.github.io/2021/05/03/Express-Cookie-%E4%BB%8B%E7%B4%B9-1/">
 
 
 <script id="page-configurations">
@@ -46,7 +48,7 @@
   };
 </script>
 
-  <title>JavaScript 陣列隨機取得一筆資料 | 傑瑞的技術日記</title>
+  <title>Express Cookie 介紹 | 傑瑞的技術日記</title>
   
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-C6JZKRV0VH"></script>
     <script>
@@ -204,7 +206,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-TW">
-    <link itemprop="mainEntityOfPage" href="https://jerry83314.github.io/2021/03/28/%E9%99%A3%E5%88%97%E9%9A%A8%E6%A9%9F%E5%8F%96%E5%BE%97%E4%B8%80%E7%AD%86%E8%B3%87%E6%96%99/">
+    <link itemprop="mainEntityOfPage" href="https://jerry83314.github.io/2021/05/03/Express-Cookie-%E4%BB%8B%E7%B4%B9-1/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="https://i.imgur.com/RQNIZ3m.png">
@@ -217,7 +219,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          JavaScript 陣列隨機取得一筆資料
+          Express Cookie 介紹
         </h1>
 
         <div class="post-meta">
@@ -227,7 +229,7 @@
               </span>
               <span class="post-meta-item-text">發表於</span>
 
-              <time title="創建時間：2021-03-28 15:29:43" itemprop="dateCreated datePublished" datetime="2021-03-28T15:29:43+08:00">2021-03-28</time>
+              <time title="創建時間：2021-05-03 20:46:30" itemprop="dateCreated datePublished" datetime="2021-05-03T20:46:30+08:00">2021-05-03</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -235,12 +237,20 @@
               </span>
               <span class="post-meta-item-text">分類於</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JavaScript/" itemprop="url" rel="index"><span itemprop="name">JavaScript</span></a>
+                  <a href="/categories/node/" itemprop="url" rel="index"><span itemprop="name">node</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/node/express/" itemprop="url" rel="index"><span itemprop="name">express</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/node/express/cookie/" itemprop="url" rel="index"><span itemprop="name">cookie</span></a>
                 </span>
             </span>
 
           
-            <div class="post-description">一大包資料，卻只要其中的一筆，這一筆在每一次進入頁面的時候都要隨機 Random...</div>
+            <div class="post-description">Cookie 為一個能夠儲存資料在瀏覽器的小型資料庫且能夠在 client 端 和 server 端讀取和寫入...</div>
 
         </div>
       </header>
@@ -251,11 +261,26 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>不知道大家有沒有遇過一種情況，打 API 完之後取得的是一大包資料，卻只要其中的一筆，而這一筆在每一次進入頁面的時候都要隨機 Random，這時候可以使用 JavaScript 內的 Math.floor 搭配 Math.random 來處理</p>
+        <p>Cookie 為一個能夠儲存資料在瀏覽器的小型資料庫且能夠在 client 端 和 server 端讀取和寫入</p>
+<h4 id="試著在前端寫點-cookie"><a href="#試著在前端寫點-cookie" class="headerlink" title="試著在前端寫點 cookie"></a>試著在前端寫點 cookie</h4><p>首先可以先試著打開 google 搜尋首頁，試著輸入</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">document</span>.cookie</span><br></pre></td></tr></table></figure>
+<p>就會撈出一些可以撈的 cookie 資訊，一些不能撈的通常都會是 httpOnly 不能透過 JS 去撈取<br>這也是資安的關係</p>
+<p>通常寫入 cookie 會如下:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">document</span>.cookie=<span class="string">&quot;myName=John&quot;</span></span><br></pre></td></tr></table></figure>
+<p>這時候在 cookie 看，就會多一則 myName 的資訊</p>
+<p>有時候會希望 cookie 放的內容，有時效性<br>這時候可以這樣寫:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">document</span>.cookie=<span class="string">&quot;myName=John; expires=GMT時間字串;&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// expires 內放的是 GMT 時間字串</span></span><br><span class="line"><span class="comment">// 可以用 new Date().toGMTString() 來查詢</span></span><br></pre></td></tr></table></figure>
+<p>另外一個寫法是，假設想要 10 秒過後失效:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">document</span>.cookie=<span class="string">&quot;myName=John; max-age=10;&quot;</span></span><br></pre></td></tr></table></figure>
+<p>變成是 max-age 屬性</p>
 <hr>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> ary = [<span class="string">&#x27;a&#x27;</span>, <span class="string">&#x27;b&#x27;</span>, <span class="string">&#x27;c&#x27;</span>];</span><br><span class="line"><span class="keyword">const</span> key = <span class="built_in">Math</span>.floor(<span class="built_in">Math</span>.radom() * ary.length);</span><br><span class="line">ary[key]</span><br></pre></td></tr></table></figure>
-<hr>
-<p>這樣的一個小技巧，就可以達到我們的需求了，分享給大家！</p>
+<h4 id="Express-的套件-Cookie-parser"><a href="#Express-的套件-Cookie-parser" class="headerlink" title="Express 的套件 Cookie-parser"></a>Express 的套件 Cookie-parser</h4><p>用 express-generator 快速產生一個專案後，會發現裡面有一個 cookie-parser 的套件可以做使用<br>它是用來解析 cookie 的工具<br>在 index.ejs 寫入 cookie:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">document</span>.cookie = <span class="string">&quot;testConsole=TEST&quot;</span></span><br></pre></td></tr></table></figure>
+<p>在 routes/index.js 接收:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">router.get(<span class="string">&#x27;/&#x27;</span>, <span class="function"><span class="keyword">function</span>(<span class="params">req, res, next</span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(req.cookies)</span><br><span class="line">  res.render(<span class="string">&#x27;index&#x27;</span>, &#123; <span class="attr">title</span>: <span class="string">&#x27;Express&#x27;</span> &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>頁面刷新後，就會發現 console 把前端撰寫的 cookie 給帶回來後端了<br>如果今天反過來，想要從後端把資料帶進去 cookie 給前端呢？<br>一樣在 routes/index.js 撰寫，只不過這次是透過 res 下去寫:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">router.get(<span class="string">&#x27;/&#x27;</span>, <span class="function"><span class="keyword">function</span>(<span class="params">req, res, next</span>) </span>&#123;</span><br><span class="line">  <span class="comment">// res.cookie(&#x27;屬性&#x27;, &#x27;值&#x27;, &#123;&#125;)</span></span><br><span class="line">  res.cookie(<span class="string">&#x27;test&#x27;</span>, <span class="string">&#x27;TEST&#x27;</span>, &#123;</span><br><span class="line">    <span class="comment">// maxAge 為幾秒後消失，1000 為一秒</span></span><br><span class="line">    maxAge: <span class="number">1000</span>*<span class="number">100</span>,</span><br><span class="line">    <span class="comment">// 當 httpOnly 為 true 時，用戶不可透過 JS 撈取此 cookie</span></span><br><span class="line">    httpOnly: <span class="literal">true</span></span><br><span class="line">  &#125;)</span><br><span class="line">  res.render(<span class="string">&#x27;index&#x27;</span>, &#123; <span class="attr">title</span>: <span class="string">&#x27;Express&#x27;</span> &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>這個時候可以在 index.ejs 的 cookie 就可以看到從後端傳過來的 cookie 資訊</p>
 
     </div>
 
@@ -266,7 +291,9 @@
       <footer class="post-footer">
           
           <div class="post-tags">
-              <a href="/tags/JavaScript/" rel="tag"><i class="fa fa-tag"></i> JavaScript</a>
+              <a href="/tags/node/" rel="tag"><i class="fa fa-tag"></i> node</a>
+              <a href="/tags/express/" rel="tag"><i class="fa fa-tag"></i> express</a>
+              <a href="/tags/cookie/" rel="tag"><i class="fa fa-tag"></i> cookie</a>
           </div>
 
         
@@ -275,13 +302,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2021/02/16/%E6%90%AD%E9%85%8D/" rel="prev" title="Promise 搭配 $nextTick">
-      <i class="fa fa-chevron-left"></i> Promise 搭配 $nextTick
+    <a href="/2021/05/03/Express-Cookie-%E4%BB%8B%E7%B4%B9/" rel="prev" title="Express Cookie 介紹">
+      <i class="fa fa-chevron-left"></i> Express Cookie 介紹
     </a></div>
-      <div class="post-nav-item">
-    <a href="/2021/04/20/Node%20%E5%88%9D%E9%AB%94%E9%A9%97/" rel="next" title="Node 初體驗">
-      Node 初體驗 <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -340,6 +364,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%A9%A6%E8%91%97%E5%9C%A8%E5%89%8D%E7%AB%AF%E5%AF%AB%E9%BB%9E-cookie"><span class="nav-number">1.</span> <span class="nav-text">試著在前端寫點 cookie</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Express-%E7%9A%84%E5%A5%97%E4%BB%B6-Cookie-parser"><span class="nav-number">2.</span> <span class="nav-text">Express 的套件 Cookie-parser</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
