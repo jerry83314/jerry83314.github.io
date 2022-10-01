@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"jerry83314.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="前一篇講到了在後端的部分創建新增和刪除資料的 API，這篇介紹前端去戳 API 渲染畫面的部分...">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Express + Firebase 設計 todoList API(下)">
+<meta property="og:url" content="http://jerry83314.github.io/2021/05/03/Express-Firebase-%E8%A8%AD%E8%A8%88-todoList-API-%E4%B8%8B/index.html">
+<meta property="og:site_name" content="傑瑞的技術日記">
+<meta property="og:description" content="前一篇講到了在後端的部分創建新增和刪除資料的 API，這篇介紹前端去戳 API 渲染畫面的部分...">
+<meta property="og:locale" content="zh_TW">
+<meta property="article:published_time" content="2021-05-03T07:36:36.000Z">
+<meta property="article:modified_time" content="2022-10-01T18:38:47.294Z">
+<meta property="article:author" content="Jerry Huang">
+<meta property="article:tag" content="node">
+<meta property="article:tag" content="express">
+<meta property="article:tag" content="firebase">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://jerry83314.github.io/2021/05/03/Express-Firebase-%E8%A8%AD%E8%A8%88-todoList-API-%E4%B8%8B/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-TW'
+  };
+</script>
+
+  <title>Express + Firebase 設計 todoList API(下) | 傑瑞的技術日記</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切換導航欄">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">傑瑞的技術日記</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">你今天前端了嗎？</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首頁</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>標籤</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分類</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>歸檔</a>
+
+  </li>
+        <li class="menu-item menu-item-友情連結">
+
+    <a href="/link" rel="section"><i class="fa fa-link fa-fw"></i>友情連結</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-TW">
+    <link itemprop="mainEntityOfPage" href="http://jerry83314.github.io/2021/05/03/Express-Firebase-%E8%A8%AD%E8%A8%88-todoList-API-%E4%B8%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://i.imgur.com/RQNIZ3m.png">
+      <meta itemprop="name" content="Jerry Huang">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="傑瑞的技術日記">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Express + Firebase 設計 todoList API(下)
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">發表於</span>
+
+              <time title="創建時間：2021-05-03 15:36:36" itemprop="dateCreated datePublished" datetime="2021-05-03T15:36:36+08:00">2021-05-03</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新於</span>
+                <time title="修改時間：2022-10-02 02:38:47" itemprop="dateModified" datetime="2022-10-02T02:38:47+08:00">2022-10-02</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分類於</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/node/" itemprop="url" rel="index"><span itemprop="name">node</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/node/express/" itemprop="url" rel="index"><span itemprop="name">express</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/node/express/firebase/" itemprop="url" rel="index"><span itemprop="name">firebase</span></a>
+                </span>
+            </span>
+
+          
+            <div class="post-description">前一篇講到了在後端的部分創建新增和刪除資料的 API，這篇介紹前端去戳 API 渲染畫面的部分...</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>前一篇講到了在後端的部分創建新增和刪除資料的 API<br>那這篇就要介紹前端去戳 API 渲染畫面的部分</p>
+<hr>
+<h4 id="前端打新增資料的-API"><a href="#前端打新增資料的-API" class="headerlink" title="前端打新增資料的 API"></a>前端打新增資料的 API</h4><p>在前端基本的 HTML 格式會如下:</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">h2</span>&gt;</span>代辦清單<span class="tag">&lt;/<span class="name">h2</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;text&quot;</span> <span class="attr">name</span>=<span class="string">&quot;content&quot;</span> <span class="attr">id</span>=<span class="string">&quot;content&quot;</span> <span class="attr">value</span>=<span class="string">&quot;&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;button&quot;</span> <span class="attr">name</span>=<span class="string">&quot;send&quot;</span> <span class="attr">id</span>=<span class="string">&quot;send&quot;</span> <span class="attr">value</span>=<span class="string">&quot;送出&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">ul</span> <span class="attr">id</span>=<span class="string">&quot;list&quot;</span>&gt;</span></span><br><span class="line">  &lt;% for(item in todoList) &#123; %&gt;</span><br><span class="line">    <span class="tag">&lt;<span class="name">li</span>&gt;</span>&lt;%- todoList[item].content %&gt;</span><br><span class="line">      <span class="tag">&lt;<span class="name">button</span> <span class="attr">type</span>=<span class="string">&quot;button&quot;</span> <span class="attr">data-key</span>=<span class="string">&quot;&lt;%- item %&gt;&quot;</span>&gt;</span>刪除<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">  &lt;% &#125; %&gt;</span><br><span class="line"><span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>上面的 todoList 是預設傳進來的<br>接著就開始撰寫前端的 JS 部分:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 選取 DOM</span></span><br><span class="line"><span class="keyword">const</span> content = <span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">&#x27;#content&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> send = <span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">&#x27;#send&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> list = <span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">&#x27;#list&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 按鈕送出之後</span></span><br><span class="line">send.<span class="title function_">addEventListener</span>(<span class="string">&#x27;click&#x27;</span>, <span class="keyword">function</span>(<span class="params">e</span>) &#123;</span><br><span class="line">  <span class="comment">// 取消元素預設行為</span></span><br><span class="line">  e.<span class="title function_">preventDefault</span>();</span><br><span class="line">  <span class="comment">// 開始 AJAX</span></span><br><span class="line">  <span class="keyword">const</span> xhr = <span class="keyword">new</span> <span class="title class_">XMLHttpRequest</span>();</span><br><span class="line">  xhr.<span class="title function_">open</span>(<span class="string">&#x27;post&#x27;</span>, <span class="string">&#x27;/addTodo&#x27;</span>);</span><br><span class="line">  xhr.<span class="title function_">setRequestHeader</span>(<span class="string">&#x27;Content-type&#x27;</span>, <span class="string">&#x27;application/json&#x27;</span>);</span><br><span class="line">  <span class="comment">// 把傳送的資料轉成字串</span></span><br><span class="line">  <span class="keyword">const</span> data = <span class="title class_">JSON</span>.<span class="title function_">stringify</span>(&#123; <span class="attr">content</span>: content.<span class="property">value</span> &#125;);</span><br><span class="line">  xhr.<span class="title function_">send</span>(data);</span><br><span class="line">  xhr.<span class="property">onload</span> = <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="comment">// 把撈回來的資料轉成 JSON</span></span><br><span class="line">    <span class="keyword">const</span> res = <span class="title class_">JSON</span>.<span class="title function_">parse</span>(xhr.<span class="property">responseText</span>);</span><br><span class="line">    <span class="comment">// 如果 success 為 false 就不繼續執行</span></span><br><span class="line">    <span class="keyword">if</span>(res.<span class="property">success</span> === <span class="literal">false</span>) &#123;</span><br><span class="line">      <span class="title function_">alert</span>(res.<span class="property">msg</span>);</span><br><span class="line">      <span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 下面開始重組內容字串</span></span><br><span class="line">    <span class="keyword">const</span> todoList = res.<span class="property">result</span>;</span><br><span class="line">    <span class="keyword">let</span> str = <span class="string">&#x27;&#x27;</span>;</span><br><span class="line">    <span class="keyword">for</span>(item <span class="keyword">in</span> todoList) &#123;</span><br><span class="line">      str += <span class="string">`&lt;li&gt;<span class="subst">$&#123;todoList[item].content&#125;</span></span></span><br><span class="line"><span class="string">        &lt;button type=&quot;button&quot; data-key=&quot;<span class="subst">$&#123;item&#125;</span>&quot;&gt;刪除&lt;/button&gt;</span></span><br><span class="line"><span class="string">      &lt;/li&gt;`</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 重新渲染</span></span><br><span class="line">    list.<span class="property">innerHTML</span> = str;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<hr>
+<h4 id="前端打刪除資料的-API"><a href="#前端打刪除資料的-API" class="headerlink" title="前端打刪除資料的 API"></a>前端打刪除資料的 API</h4><p>刪除和新增其實也是大同小異，畢竟前面我們在 button 上，有綁了 data-key 所以就很好取到當筆資料的 key 值了</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 刪除功能</span></span><br><span class="line">list.<span class="title function_">addEventListener</span>(<span class="string">&#x27;click&#x27;</span>, <span class="keyword">function</span>(<span class="params">e</span>) &#123;</span><br><span class="line">  <span class="comment">// 如果不是 button 元素，則中斷</span></span><br><span class="line">  <span class="keyword">if</span>(e.<span class="property">target</span>.<span class="property">nodeName</span> !== <span class="string">&#x27;BUTTON&#x27;</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 取得綁在 button 上的 key</span></span><br><span class="line">  <span class="keyword">const</span> key = e.<span class="property">target</span>.<span class="property">dataset</span>.<span class="property">key</span>;</span><br><span class="line">  <span class="comment">// 開始 AJAX</span></span><br><span class="line">  <span class="keyword">const</span> xhr = <span class="keyword">new</span> <span class="title class_">XMLHttpRequest</span>();</span><br><span class="line">  xhr.<span class="title function_">open</span>(<span class="string">&#x27;post&#x27;</span>, <span class="string">&#x27;/removeTodo&#x27;</span>);</span><br><span class="line">  xhr.<span class="title function_">setRequestHeader</span>(<span class="string">&#x27;Content-type&#x27;</span>, <span class="string">&#x27;application/json&#x27;</span>);</span><br><span class="line">  <span class="keyword">const</span> data = <span class="title class_">JSON</span>.<span class="title function_">stringify</span>(&#123;</span><br><span class="line">    <span class="attr">id</span>: key</span><br><span class="line">  &#125;);</span><br><span class="line">  xhr.<span class="title function_">send</span>(data);</span><br><span class="line">  xhr.<span class="property">onload</span> = <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">const</span> res = <span class="title class_">JSON</span>.<span class="title function_">parse</span>(xhr.<span class="property">responseText</span>);</span><br><span class="line">    <span class="comment">// 如果 success 為 false 就不繼續執行</span></span><br><span class="line">    <span class="keyword">if</span>(res.<span class="property">success</span> === <span class="literal">false</span>) &#123;</span><br><span class="line">      <span class="title function_">alert</span>(res.<span class="property">msg</span>);</span><br><span class="line">      <span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 下面開始重組內容字串</span></span><br><span class="line">    <span class="keyword">const</span> todoList = res.<span class="property">result</span>;</span><br><span class="line">    <span class="keyword">let</span> str = <span class="string">&#x27;&#x27;</span>;</span><br><span class="line">    <span class="keyword">for</span>(item <span class="keyword">in</span> todoList) &#123;</span><br><span class="line">      str += <span class="string">`&lt;li&gt;<span class="subst">$&#123;todoList[item].content&#125;</span></span></span><br><span class="line"><span class="string">        &lt;button type=&quot;button&quot; data-key=&quot;<span class="subst">$&#123;item&#125;</span>&quot;&gt;刪除&lt;/button&gt;</span></span><br><span class="line"><span class="string">      &lt;/li&gt;`</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 重新渲染</span></span><br><span class="line">    list.<span class="property">innerHTML</span> = str;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<hr>
+<h4 id="佈屬到-heroku"><a href="#佈屬到-heroku" class="headerlink" title="佈屬到 heroku"></a>佈屬到 heroku</h4><p>做到這裡也算一個小應用了，我就好奇怎麼佈屬上去 heroku，於是就研究了一下<br>首先</p>
+<ol>
+<li>註冊一個 heroku 的帳號</li>
+<li>需要有 Git 工具</li>
+<li>安裝 heroku CLI<br>附上 heroku 對 node 佈屬的文件 <a target="_blank" rel="noopener" href="https://devcenter.heroku.com/categories/nodejs-support">連結</a></li>
+</ol>
+<p>開啟終端機進到要佈屬上去的專案輸入指令 <code>git init</code><br>把 git 初始化，且加入到索引並 commit<br>這裡要注意自己創建 .gitignore 不要把 node_modules 傳上去<br>並且注意一下 package.json 的 script 是否有 node app.js 這個指令<br>接著輸入 <code>heroku create</code> 創建專案<br>這時候會有一個隨機亂碼的專案被產生，heroku 的後台也可以看到<br>接著 <code>git push heroku master</code><br>就佈屬上去 heroku 了<br>以上都是 heroku 登入的狀態，注意自己是否為登入狀態</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/node/" rel="tag"># node</a>
+              <a href="/tags/express/" rel="tag"># express</a>
+              <a href="/tags/firebase/" rel="tag"># firebase</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/05/02/Express-Firebase-%E8%A8%AD%E8%A8%88-todoList-API-%E4%B8%8A/" rel="prev" title="Express + Firebase 設計 todoList API(上)">
+      <i class="fa fa-chevron-left"></i> Express + Firebase 設計 todoList API(上)
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/05/03/Express-Cookie-%E4%BB%8B%E7%B4%B9/" rel="next" title="Express Cookie 介紹">
+      Express Cookie 介紹 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目錄
+        </li>
+        <li class="sidebar-nav-overview">
+          本站概要
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%89%8D%E7%AB%AF%E6%89%93%E6%96%B0%E5%A2%9E%E8%B3%87%E6%96%99%E7%9A%84-API"><span class="nav-number">1.</span> <span class="nav-text">前端打新增資料的 API</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%89%8D%E7%AB%AF%E6%89%93%E5%88%AA%E9%99%A4%E8%B3%87%E6%96%99%E7%9A%84-API"><span class="nav-number">2.</span> <span class="nav-text">前端打刪除資料的 API</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BD%88%E5%B1%AC%E5%88%B0-heroku"><span class="nav-number">3.</span> <span class="nav-text">佈屬到 heroku</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Jerry Huang"
+      src="https://i.imgur.com/RQNIZ3m.png">
+  <p class="site-author-name" itemprop="name">Jerry Huang</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">19</span>
+          <span class="site-state-item-name">文章</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">分類</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">標籤</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/jerry83314" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;jerry83314" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">若要轉載文章，麻煩請保留原作者名稱與原始連結</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 強力驅動
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
